@@ -58,8 +58,8 @@ Cloud sync is optional. When configured, the app stores one JSON document in Ups
 
 Required environment variables:
 
-- `UPSTASH_REDIS_REST_URL`
-- `UPSTASH_REDIS_REST_TOKEN`
+- `KV_REST_API_URL` or `UPSTASH_REDIS_REST_URL`
+- `KV_REST_API_TOKEN` or `UPSTASH_REDIS_REST_TOKEN`
 - `MENTAL_GYM_SYNC_SECRET`
 
 The sync passcode typed in Settings must match `MENTAL_GYM_SYNC_SECRET`.
