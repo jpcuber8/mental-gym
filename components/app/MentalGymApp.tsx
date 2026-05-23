@@ -154,10 +154,13 @@ export function MentalGymApp() {
     }
 
     try {
+      setIsSyncing(true);
       await pushCloudData(secret, nextData);
       setSyncMessage("Auto-synced after your session.");
     } catch {
       setSyncMessage("Session saved locally. Cloud sync needs attention in Settings.");
+    } finally {
+      setIsSyncing(false);
     }
   }
 
@@ -269,7 +272,15 @@ export function MentalGymApp() {
 
           <section className="mx-auto w-full max-w-4xl flex-1 px-4 pb-28 pt-5 lg:px-8 lg:pb-10">
             {activeTab === "today" && (
-              <TodayView data={data} date={today} recommendation={recommendation} onStart={startSession} />
+              <TodayView
+                data={data}
+                date={today}
+                isSyncing={isSyncing}
+                recommendation={recommendation}
+                syncMessage={syncMessage}
+                syncSecret={syncSecret}
+                onStart={startSession}
+              />
             )}
             {activeTab === "progress" && <ProgressView data={data} phaseGoal={phase.frequencyGoal} />}
             {activeTab === "season" && <SeasonView date={today} />}
@@ -320,12 +331,18 @@ export function MentalGymApp() {
 function TodayView({
   data,
   date,
+  isSyncing,
   recommendation,
+  syncMessage,
+  syncSecret,
   onStart
 }: {
   data: MentalGymData;
   date: Date;
+  isSyncing: boolean;
   recommendation: SessionPlan;
+  syncMessage: string;
+  syncSecret: string;
   onStart: (plan: SessionPlan) => void;
 }) {
   const phase = getCurrentPhase(date);
@@ -335,6 +352,8 @@ function TodayView({
   const raceDays = daysUntilEvent(nextRace, date);
   const adherence = getAdherence(data, phase.frequencyGoal, date);
   const averages = getLatestAverages(data);
+  const isSignedIn = Boolean(syncSecret.trim());
+  const hasSyncIssue = syncMessage.toLowerCase().includes("failed") || syncMessage.toLowerCase().includes("attention");
 
   return (
     <div className="space-y-5">
@@ -352,6 +371,33 @@ function TodayView({
             <p className="text-slate-300">Next event</p>
             <p className="mt-1 font-semibold">{nextEvent?.title ?? "Season review"}</p>
             <p className="text-slate-300">{eventDays === null ? "No dated event" : `${eventDays} days`}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Account</p>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <span
+                className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                  isSignedIn ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-800"
+                }`}
+              >
+                {isSignedIn ? "Signed in" : "Not signed in"}
+              </span>
+              <span
+                className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                  hasSyncIssue ? "bg-amber-50 text-amber-800" : "bg-slate-100 text-slate-700"
+                }`}
+              >
+                {isSyncing ? "Syncing" : hasSyncIssue ? "Sync needs attention" : "Sync ready"}
+              </span>
+            </div>
+          </div>
+          <div className="max-w-[52%] text-right text-sm leading-5 text-slate-600">
+            {syncMessage || (isSignedIn ? "Cloud sync is ready after sessions." : "Add your passcode in Settings.")}
           </div>
         </div>
       </section>
