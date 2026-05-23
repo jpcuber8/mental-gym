@@ -10,6 +10,7 @@ Mental Gym is built as a daily 5-10 minute sport psychology training room: readi
 - TypeScript
 - Tailwind CSS
 - Browser localStorage persistence
+- Optional Vercel + Upstash Redis cloud sync
 - Mobile-first design
 - Vercel-ready deployment
 
@@ -21,6 +22,7 @@ Mental Gym is built as a daily 5-10 minute sport psychology training room: readi
 - Tracks weekly adherence, recent trends, carryover cues, and session history.
 - Provides skill stations for breathing, attention, self-talk, imagery, process goals, routine rehearsal, and reset/refocus.
 - Stores data locally and supports JSON export, import, and reset.
+- Optionally syncs data between phone and computer with a private passcode.
 
 ## Running Locally
 
@@ -52,7 +54,15 @@ Stored data includes:
 - skill levels
 - settings
 
-There is no Supabase backend in this version. A backend would only be useful later if the app needs sync across browsers/devices, encrypted cloud backup, authenticated private access, or analytics that survive browser resets.
+Cloud sync is optional. When configured, the app stores one JSON document in Upstash Redis through a protected Vercel API route.
+
+Required environment variables:
+
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
+- `MENTAL_GYM_SYNC_SECRET`
+
+The sync passcode typed in Settings must match `MENTAL_GYM_SYNC_SECRET`.
 
 ## Project Structure
 
@@ -84,7 +94,8 @@ types/
 1. Push the repo to GitHub.
 2. Import the project in Vercel.
 3. Use the default Next.js settings.
-4. No required environment variables for V1.
-5. Deploy.
+4. For local-only mode, no environment variables are required.
+5. For cross-device sync, add an Upstash Redis store from the Vercel Marketplace and set `MENTAL_GYM_SYNC_SECRET`.
+6. Deploy.
 
-Because data is local-first, each browser/device has its own data unless JSON is manually exported and imported.
+Because data is local-first, each browser/device keeps its own copy. Use Settings to push/pull cloud sync or manually export/import JSON.

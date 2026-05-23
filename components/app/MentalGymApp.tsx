@@ -22,6 +22,7 @@ import {
 } from "@/lib/season";
 import { getAdherence, getLatestAverages, getMetricTrend, getSessionsThisWeek } from "@/lib/analytics";
 import { getStation, stations } from "@/lib/stations";
+import { loadSyncSecret, mergeMentalGymData, pullCloudData, pushCloudData, saveSyncSecret } from "@/lib/sync";
 import type {
   MentalGymData,
   ReadinessCheck,
@@ -78,7 +79,7 @@ const emptyReflection: Reflection = {
 };
 
 export function MentalGymApp() {
-  const [data, setData] = useState<MentalGymData | null>(null);
+  const [data, setData] = useState<MentalGymData>(() => loadMentalGymData());
   const [activeTab, setActiveTab] = useState<TabId>("today");
   const [activePlan, setActivePlan] = useState<SessionPlan | null>(null);
   const [sessionStepIndex, setSessionStepIndex] = useState(0);
@@ -86,23 +87,20 @@ export function MentalGymApp() {
   const [reflection, setReflection] = useState<Reflection>(emptyReflection);
   const [importText, setImportText] = useState("");
   const [importMessage, setImportMessage] = useState("");
+  const [syncSecret, setSyncSecret] = useState(() => loadSyncSecret());
+  const [syncMessage, setSyncMessage] = useState("");
+  const [isSyncing, setIsSyncing] = useState(false);
 
   useEffect(() => {
-    setData(loadMentalGymData());
-  }, []);
-
-  useEffect(() => {
-    if (data) {
-      saveMentalGymData(data);
-      document.documentElement.dataset.reducedMotion = data.settings.reducedMotion ? "true" : "false";
-    }
+    saveMentalGymData(data);
+    document.documentElement.dataset.reducedMotion = data.settings.reducedMotion ? "true" : "false";
   }, [data]);
 
   const today = useMemo(() => new Date(), []);
   const phase = getCurrentPhase(today);
   const recommendation = data ? getRecommendation(data, today) : null;
 
-  if (!data || !recommendation) {
+  if (!recommendation) {
     return (
       <main className="min-h-screen bg-stone-100 px-4 py-6 text-slate-950">
         <div className="mx-auto max-w-5xl">
@@ -140,10 +138,75 @@ export function MentalGymApp() {
       reflection
     };
 
-    setData(addCompletedSession(data, record));
+    const nextData = addCompletedSession(data, record);
+    setData(nextData);
+    void autoPush(nextData);
     setActivePlan(null);
     setSessionStepIndex(0);
     setActiveTab("progress");
+  }
+
+  async function autoPush(nextData: MentalGymData) {
+    const secret = loadSyncSecret();
+
+    if (!secret) {
+      return;
+    }
+
+    try {
+      await pushCloudData(secret, nextData);
+      setSyncMessage("Auto-synced after your session.");
+    } catch {
+      setSyncMessage("Session saved locally. Cloud sync needs attention in Settings.");
+    }
+  }
+
+  async function handlePushCloud() {
+    if (!data || !syncSecret.trim()) {
+      setSyncMessage("Enter your sync passcode first.");
+      return;
+    }
+
+    setIsSyncing(true);
+    setSyncMessage("");
+
+    try {
+      saveSyncSecret(syncSecret);
+      await pushCloudData(syncSecret.trim(), data);
+      setSyncMessage("Pushed this device's data to cloud sync.");
+    } catch (error) {
+      setSyncMessage(error instanceof Error ? error.message : "Cloud push failed.");
+    } finally {
+      setIsSyncing(false);
+    }
+  }
+
+  async function handlePullCloud() {
+    if (!data || !syncSecret.trim()) {
+      setSyncMessage("Enter your sync passcode first.");
+      return;
+    }
+
+    setIsSyncing(true);
+    setSyncMessage("");
+
+    try {
+      saveSyncSecret(syncSecret);
+      const cloud = await pullCloudData(syncSecret.trim());
+
+      if (!cloud) {
+        setSyncMessage("No cloud data yet. Push from your main device first.");
+        return;
+      }
+
+      const merged = mergeMentalGymData(data, cloud);
+      setData(merged);
+      setSyncMessage("Pulled and merged cloud data onto this device.");
+    } catch (error) {
+      setSyncMessage(error instanceof Error ? error.message : "Cloud pull failed.");
+    } finally {
+      setIsSyncing(false);
+    }
   }
 
   if (activePlan) {
@@ -216,9 +279,18 @@ export function MentalGymApp() {
                 data={data}
                 importMessage={importMessage}
                 importText={importText}
+                isSyncing={isSyncing}
                 onDataChange={(nextData) => setData(nextData)}
                 onImportMessage={setImportMessage}
                 onImportText={setImportText}
+                onPullCloud={handlePullCloud}
+                onPushCloud={handlePushCloud}
+                onSyncSecretChange={(secret) => {
+                  setSyncSecret(secret);
+                  saveSyncSecret(secret);
+                }}
+                syncMessage={syncMessage}
+                syncSecret={syncSecret}
               />
             )}
           </section>
@@ -461,7 +533,7 @@ function GuidedStep({ step, transferContext }: { step: SessionPlan["steps"]["pri
           <span className="font-semibold">Scene:</span> {transferContext}
         </div>
       )}
-      <Timer seconds={parseDuration(step.duration)} />
+      <Timer key={`${step.label}-${step.duration}`} seconds={parseDuration(step.duration)} />
     </div>
   );
 }
@@ -721,16 +793,28 @@ function SettingsView({
   data,
   importText,
   importMessage,
+  syncSecret,
+  syncMessage,
+  isSyncing,
   onDataChange,
   onImportText,
-  onImportMessage
+  onImportMessage,
+  onSyncSecretChange,
+  onPullCloud,
+  onPushCloud
 }: {
   data: MentalGymData;
   importText: string;
   importMessage: string;
+  syncSecret: string;
+  syncMessage: string;
+  isSyncing: boolean;
   onDataChange: (data: MentalGymData) => void;
   onImportText: (value: string) => void;
   onImportMessage: (value: string) => void;
+  onSyncSecretChange: (value: string) => void;
+  onPullCloud: () => void;
+  onPushCloud: () => void;
 }) {
   function downloadExport() {
     const blob = new Blob([exportMentalGymData(data)], { type: "application/json" });
@@ -789,8 +873,43 @@ function SettingsView({
       <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
         <h3 className="text-lg font-semibold">Data</h3>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          Data is stored in this browser&apos;s localStorage. There is no account, no Supabase backend, and no paid API.
+          Data is stored locally first. Cloud sync can copy the same private training log between your phone and computer.
         </p>
+        <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <h4 className="font-semibold">Cloud sync</h4>
+          <p className="mt-1 text-sm leading-6 text-slate-600">
+            Use the same sync passcode on every device. Push from the device with the latest data, then pull on the other device.
+          </p>
+          <label className="mt-4 block">
+            <span className="text-sm font-semibold text-slate-800">Sync passcode</span>
+            <input
+              className="mt-2 w-full rounded-md border border-slate-300 px-3 py-3 text-sm"
+              onChange={(event) => onSyncSecretChange(event.target.value)}
+              placeholder="Same value as MENTAL_GYM_SYNC_SECRET"
+              type="password"
+              value={syncSecret}
+            />
+          </label>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <button
+              className="rounded-md border border-slate-950 px-4 py-3 text-sm font-semibold text-slate-950 disabled:opacity-50"
+              disabled={isSyncing}
+              onClick={onPullCloud}
+              type="button"
+            >
+              Pull from cloud
+            </button>
+            <button
+              className="rounded-md bg-slate-950 px-4 py-3 text-sm font-semibold text-white disabled:opacity-50"
+              disabled={isSyncing}
+              onClick={onPushCloud}
+              type="button"
+            >
+              Push to cloud
+            </button>
+          </div>
+          {syncMessage && <p className="mt-3 text-sm text-slate-600">{syncMessage}</p>}
+        </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <button className="rounded-md bg-slate-950 px-4 py-3 text-sm font-semibold text-white" onClick={downloadExport} type="button">
             Export JSON
@@ -856,11 +975,6 @@ function Slider({ label, value, onChange }: { label: string; value: number; onCh
 function Timer({ seconds }: { seconds: number }) {
   const [remaining, setRemaining] = useState(seconds);
   const [running, setRunning] = useState(false);
-
-  useEffect(() => {
-    setRemaining(seconds);
-    setRunning(false);
-  }, [seconds]);
 
   useEffect(() => {
     if (!running || remaining <= 0) {

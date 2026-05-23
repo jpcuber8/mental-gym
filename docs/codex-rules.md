@@ -5,7 +5,8 @@
 - Build a personal NCAA cross country mental performance app.
 - Do not turn it into a public wellness SaaS product.
 - Do not add coach dashboards, billing, team features, admin panels, or enterprise auth.
-- Do not add Supabase unless a future request clearly needs sync, backup, or authentication.
+- Do not add Supabase unless a future request clearly needs a full relational backend or authentication.
+- Prefer the existing Upstash Redis sync route for simple cross-device backup/sync.
 - Do not add AI or paid APIs.
 - Keep the app deployable to Vercel.
 
@@ -15,6 +16,7 @@
 - Use TypeScript.
 - Use Tailwind CSS.
 - Keep persistence behind `lib/storage.ts`.
+- Keep cloud sync helpers in `lib/sync.ts`.
 - Keep recommendation logic in `lib/recommendation.ts`.
 - Keep season calendar and phase logic in `lib/season.ts`.
 - Keep station content and scripts in `lib/stations.ts`.
