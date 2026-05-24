@@ -8,7 +8,7 @@ The app should feel like a personal training room: calm, athletic, premium, and 
 
 ## Core Goal
 
-Provide a daily 5-10 minute mental workout that progresses over time like a training plan.
+Provide a daily 5-10 minute pre-run mental workout that progresses over time like a training plan. The app should normally be used before the day's run, workout, warm-up, race routine, travel-day movement, or recovery block.
 
 The recommendation engine considers:
 
@@ -35,7 +35,7 @@ Core targets:
 - race-scenario imagery
 - process goals and if-then coping plans
 - pre-performance routines
-- reset/refocus after bad workouts, bad races, travel stress, or difficult transitions
+- reset/refocus before the next run when bad workouts, bad races, travel stress, or difficult transitions are still carrying over
 
 The app is science-informed but modest in claims. It is not designed to diagnose or treat mental illness.
 

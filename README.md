@@ -2,7 +2,7 @@
 
 A private, local-first NCAA cross country mental performance app for a UCLA distance runner.
 
-Mental Gym is built as a daily 5-10 minute sport psychology training room: readiness check, regulation primer, primary skill rep, cross country transfer rep, and short reflection. It is not a public SaaS product, coach dashboard, medical product, or generic wellness tracker.
+Mental Gym is built as a daily 5-10 minute pre-run sport psychology training room: readiness check, regulation primer, primary skill rep, cross country transfer rep, and short reflection. Use it before the day's run, workout, warm-up, race routine, travel-day movement, or recovery block. It is not a public SaaS product, coach dashboard, medical product, or generic wellness tracker.
 
 ## Tech Stack
 
@@ -16,7 +16,7 @@ Mental Gym is built as a daily 5-10 minute sport psychology training room: readi
 
 ## What The App Does
 
-- Recommends a daily mental workout from the current season phase, upcoming races, recent check-ins, adherence, stress, focus, confidence, and prior usefulness.
+- Recommends a daily pre-run mental workout from the current season phase, upcoming races, recent check-ins, adherence, stress, focus, confidence, and prior usefulness.
 - Periodizes mental training from base work through London travel, UCLA reporting transition, Big Bear altitude camp, Nuttycombe, Big Tens, and West Regional.
 - Guides a complete daily session with readiness ratings, breathing, skill practice, XC-specific transfer, and reflection.
 - Tracks weekly adherence, recent trends, carryover cues, and session history.

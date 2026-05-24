@@ -156,7 +156,7 @@ export function MentalGymApp() {
     try {
       setIsSyncing(true);
       await pushCloudData(secret, nextData);
-      setSyncMessage("Auto-synced after your session.");
+      setSyncMessage("Auto-synced after your pre-run session.");
     } catch {
       setSyncMessage("Session saved locally. Cloud sync needs attention in Settings.");
     } finally {
@@ -397,7 +397,7 @@ function TodayView({
             </div>
           </div>
           <div className="max-w-[52%] text-right text-sm leading-5 text-slate-600">
-            {syncMessage || (isSignedIn ? "Cloud sync is ready after sessions." : "Add your passcode in Settings.")}
+            {syncMessage || (isSignedIn ? "Cloud sync is ready after pre-run sessions." : "Add your passcode in Settings.")}
           </div>
         </div>
       </section>
@@ -405,7 +405,7 @@ function TodayView({
       <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Recommended session</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Pre-run recommendation</p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight">{recommendation.title}</h2>
             <p className="mt-2 text-sm leading-6 text-slate-600">{recommendation.intent}</p>
           </div>
@@ -421,7 +421,7 @@ function TodayView({
           onClick={() => onStart(recommendation)}
           type="button"
         >
-          Start today&apos;s mental workout
+          Start pre-run mental workout
         </button>
       </section>
 
@@ -476,6 +476,7 @@ function SessionFlow({
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">{step.label}</p>
               <h1 className="mt-1 text-2xl font-semibold tracking-tight">{plan.title}</h1>
+              <p className="mt-2 text-sm leading-6 text-slate-600">Use this before your run, workout, warm-up, or travel-day training block.</p>
             </div>
             <Pill>{plan.durationMinutes} min</Pill>
           </div>

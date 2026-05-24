@@ -78,14 +78,14 @@ export function getRecommendation(data: MentalGymData, date = new Date(), manual
   } else if (phase.id === "baseBuild") {
     presetKey = "discomfort";
     stationId = "selfTalk";
-    whyToday.push("Base build adds discomfort scripts and workout transfer.");
+    whyToday.push("Base build adds pre-run discomfort scripts and workout transfer.");
   } else if (phase.id === "competitionBuild") {
     presetKey = "championshipConfidence";
     stationId = "imagery";
     whyToday.push("Competition build emphasizes tactical imagery and race execution.");
   } else {
     presetKey = presetForStation(stationId);
-    whyToday.push("Foundation work rotates through core stations to build skill fluency.");
+    whyToday.push("Foundation work rotates through core pre-run stations to build skill fluency over time.");
   }
 
   if (hasPoorRecentStation(data, stationId)) {
@@ -125,7 +125,7 @@ function presetForStation(stationId: StationId) {
     imagery: "championshipConfidence",
     processGoals: "altitudePatience",
     routine: "meetEve",
-    reset: "badWorkoutReset"
+    reset: "nextRunReset"
   };
 
   return map[stationId];

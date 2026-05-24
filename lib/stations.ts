@@ -5,7 +5,7 @@ export const stations: Station[] = [
     id: "breathing",
     title: "Breathing",
     shortTitle: "Breath",
-    description: "Arousal regulation for pre-workout calm, meet-eve downshift, and post-run settling.",
+    description: "Arousal regulation for the minutes before a run, workout, race, or travel-adjusted training day.",
     levels: [
       {
         level: 1,
@@ -17,7 +17,7 @@ export const stations: Station[] = [
         level: 2,
         title: "Longer Exhale",
         description: "A quieter rhythm with extended exhales or resonance-like pacing.",
-        example: "Use it after a hard workout when the body is still buzzing."
+        example: "Use it before the next run when yesterday's effort is still buzzing in the body."
       },
       {
         level: 3,
@@ -32,7 +32,7 @@ export const stations: Station[] = [
         example: "Two slow exhales before the line call-up, then cue word and first-k plan."
       }
     ],
-    examples: ["Meet-eve sleep downshift", "Race-morning nerves", "Travel reset", "Post-workout settling"]
+    examples: ["Pre-run calm", "Race-morning nerves", "Travel-day warm-up", "Workout composure"]
   },
   {
     id: "attention",
@@ -98,7 +98,7 @@ export const stations: Station[] = [
         example: "Position. Rhythm. Respond. Commit."
       }
     ],
-    examples: ["Discomfort in intervals", "Closing hard", "Hills", "Bad first rep reset"]
+    examples: ["Discomfort in intervals", "Closing hard", "Hills", "First-rep composure"]
   },
   {
     id: "imagery",
@@ -203,24 +203,24 @@ export const stations: Station[] = [
     id: "reset",
     title: "Reset / Refocus",
     shortTitle: "Reset",
-    description: "Recover-and-adapt protocols after bad workouts, bad races, travel stress, or transition strain.",
+    description: "Pre-run reset protocols that clear residue from bad workouts, bad races, travel stress, or transition strain.",
     levels: [
       {
         level: 1,
         title: "Label and Release",
-        description: "Name the moment without letting it become the whole story.",
-        example: "That rep was rough. Exhale. Next controllable."
+        description: "Name what you are carrying before the run without letting it become the whole story.",
+        example: "Yesterday was rough. Exhale. Today's first controllable."
       },
       {
         level: 2,
         title: "Label, Reframe, Next Action",
-        description: "Separate facts from interpretation and choose the next behavior.",
+        description: "Separate facts from interpretation and choose the next behavior for today's run.",
         example: "Flat legs are information. Posture and rhythm are the response."
       },
       {
         level: 3,
         title: "Future Response Rehearsal",
-        description: "Rehearse the next similar moment with a cleaner response.",
+        description: "Rehearse the next similar moment before it shows up again.",
         example: "Next time the workout bites early, I relax my jaw and stay compact."
       },
       {
@@ -230,7 +230,7 @@ export const stations: Station[] = [
         example: "Contact, mud, gap, or surge: settle, choose, commit."
       }
     ],
-    examples: ["Post-bad-workout reset", "Travel stress", "Summer-to-UCLA transition", "Post-race review"]
+    examples: ["Next-run reset", "Travel stress", "Summer-to-UCLA transition", "Race-week composure"]
   }
 ];
 
@@ -247,13 +247,13 @@ export const scriptPresets: Record<string, ScriptPreset> = {
     title: "Base-Day Focus Session",
     stationId: "attention",
     durationMinutes: 6,
-    intent: "Train calm reorientation and a low-drama response to pace changes.",
-    transferContext: "Rolling course, small surge, shoulders relaxed, rhythm found again.",
+    intent: "Use before the run to rehearse calm reorientation and a low-drama response to pace changes.",
+    transferContext: "Your next run: rolling course, small surge, shoulders relaxed, rhythm found again.",
     steps: {
       regulation: {
         label: "Regulation Primer",
         duration: "90 sec",
-        body: "Breathe in for four seconds and out for six. Let the exhale drop your shoulders instead of chasing a perfect calm.",
+        body: "Before you head out, breathe in for four seconds and out for six. Let the exhale drop your shoulders instead of chasing a perfect calm.",
         prompts: ["Inhale 4", "Exhale 6", "Nine steady breaths"]
       },
       primary: {
@@ -265,7 +265,7 @@ export const scriptPresets: Record<string, ScriptPreset> = {
       transfer: {
         label: "XC Transfer Rep",
         duration: "90 sec",
-        body: "Picture a rolling section where a small surge hits. Your job is not to panic. Relax shoulders, lock to rhythm, and return within five seconds.",
+        body: "Picture today's run hitting a rolling section where a small surge or pace change shows up. Your job is not to panic. Relax shoulders, lock to rhythm, and return within five seconds.",
         prompts: ["Notice the surge", "Relax shoulders", "Return to rhythm"]
       }
     }
@@ -274,13 +274,13 @@ export const scriptPresets: Record<string, ScriptPreset> = {
     title: "Workout-Day Discomfort Session",
     stationId: "selfTalk",
     durationMinutes: 7,
-    intent: "Prepare a cue ladder for the moment the workout starts to bite.",
-    transferContext: "Intervals or threshold work where the first wave of discomfort arrives early.",
+    intent: "Use before the workout to prepare a cue ladder for the moment it starts to bite.",
+    transferContext: "Today's intervals or threshold work, where the first wave of discomfort may arrive early.",
     steps: {
       regulation: {
         label: "Regulation Primer",
         duration: "75 sec",
-        body: "Take five slow breaths with a slightly longer exhale. Let the breath create space before the workout asks for more.",
+        body: "Take five slow breaths with a slightly longer exhale. Let the breath create space before today's workout asks for more.",
         prompts: ["Breathe low", "Longer exhale", "Let the jaw soften"]
       },
       primary: {
@@ -292,7 +292,7 @@ export const scriptPresets: Record<string, ScriptPreset> = {
       transfer: {
         label: "XC Transfer Rep",
         duration: "90 sec",
-        body: "See the moment discomfort rises. Instead of negotiating with it, run the cue and feel your form stay compact.",
+        body: "Preview the moment discomfort rises in today's session. Instead of negotiating with it, run the cue and feel your form stay compact.",
         prompts: ["Flat early? Relax jaw", "Hard middle? Run the cue", "Late? Commit to form"]
       }
     }
@@ -301,8 +301,8 @@ export const scriptPresets: Record<string, ScriptPreset> = {
     title: "Meet-Eve Routine",
     stationId: "routine",
     durationMinutes: 8,
-    intent: "Downshift while locking in a simple race routine.",
-    transferContext: "Night-before nerves, course images, and a steady first-k plan.",
+    intent: "Use before bed or pre-run to downshift while locking in a simple race routine.",
+    transferContext: "The next race: nerves, course images, and a steady first-k plan.",
     steps: {
       regulation: {
         label: "Regulation Primer",
@@ -328,8 +328,8 @@ export const scriptPresets: Record<string, ScriptPreset> = {
     title: "Race-Day Compressed Routine",
     stationId: "routine",
     durationMinutes: 3,
-    intent: "Keep it short: no new skills, just calm confidence and the first action.",
-    transferContext: "Start-line clarity with controlled aggression.",
+    intent: "Use right before warm-up or call-up: no new skills, just calm confidence and the first action.",
+    transferContext: "Today's start line: clarity with controlled aggression.",
     steps: {
       regulation: {
         label: "Regulation Primer",
@@ -351,30 +351,30 @@ export const scriptPresets: Record<string, ScriptPreset> = {
       }
     }
   },
-  badWorkoutReset: {
-    title: "Post-Bad-Workout Reset",
+  nextRunReset: {
+    title: "Pre-Run Reset",
     stationId: "reset",
     durationMinutes: 5,
-    intent: "Turn a rough session into information and one clean next rep.",
-    transferContext: "A workout, rep, or race segment that felt worse than expected.",
+    intent: "Use before the run to clear leftover noise and choose one clean first rep.",
+    transferContext: "Today's run after a hard workout, rough rep, travel day, stressful transition, or messy headspace.",
     steps: {
       regulation: {
         label: "Regulation Primer",
         duration: "60 sec",
-        body: "Name the event without judgment. Then take slow breaths until the body is less ready to debate the story.",
+        body: "Name what you are carrying into today's run without judgment. It might be a bad rep, travel stress, comparison, or just noise. Then take slow breaths until the body is less ready to debate the story.",
         prompts: ["Name it plainly", "Exhale", "No courtroom"]
       },
       primary: {
         label: "Primary Skill Rep",
         duration: "2 min",
-        body: "Three-part debrief: what happened, what was controllable, what is the next skill rep?",
-        prompts: ["Facts", "Controllables", "Next rep"]
+        body: "Three-part reset: what is present, what is controllable now, and what is the first useful action today?",
+        prompts: ["Facts", "Controllables now", "First action today"]
       },
       transfer: {
         label: "XC Transfer Rep",
         duration: "90 sec",
-        body: "Rewrite the cue for the next similar moment. The goal is not to feel perfect. The goal is a cleaner response.",
-        prompts: ["Same moment", "Cleaner cue", "Next action"]
+        body: "Preview the next similar moment before you run. The goal is not to feel perfect. The goal is to enter today's run with a cleaner response ready.",
+        prompts: ["Same moment", "Cleaner cue", "Today's action"]
       }
     }
   },
@@ -382,13 +382,13 @@ export const scriptPresets: Record<string, ScriptPreset> = {
     title: "Travel-Day Reset",
     stationId: "breathing",
     durationMinutes: 4,
-    intent: "Protect consistency without forcing normal-day standards onto a travel day.",
-    transferContext: "Airports, time shifts, disrupted sleep, and flexible routine.",
+    intent: "Use before the travel-day run, walk, or mobility block to protect consistency without forcing normal-day standards.",
+    transferContext: "Today's travel context: airports, time shifts, disrupted sleep, and flexible routine.",
     steps: {
       regulation: {
         label: "Regulation Primer",
         duration: "90 sec",
-        body: "Breathe in four, out six. Let this count as the rep. Travel days get shorter standards.",
+        body: "Breathe in four, out six. Let this count as the pre-run rep. Travel days get shorter standards.",
         prompts: ["Inhale 4", "Exhale 6", "Enough for today"]
       },
       primary: {
@@ -400,7 +400,7 @@ export const scriptPresets: Record<string, ScriptPreset> = {
       transfer: {
         label: "XC Transfer Rep",
         duration: "60 sec",
-        body: "Picture arriving and doing the next small controllable. You are still a runner when the routine is imperfect.",
+        body: "Picture arriving and doing the next small controllable before training. You are still a runner when the routine is imperfect.",
         prompts: ["Arrive", "Settle", "Next controllable"]
       }
     }
@@ -409,8 +409,8 @@ export const scriptPresets: Record<string, ScriptPreset> = {
     title: "Transition-to-Campus Grounding",
     stationId: "processGoals",
     durationMinutes: 6,
-    intent: "Make the UCLA reporting transition concrete, grounded, and low-drama.",
-    transferContext: "Summer-to-team environment, first meetings, comparison pressure, and new rhythm.",
+    intent: "Use before the run to make the UCLA reporting transition concrete, grounded, and low-drama.",
+    transferContext: "Today's team environment: first meetings, comparison pressure, new rhythm, and a steady run.",
     steps: {
       regulation: {
         label: "Regulation Primer",
@@ -427,7 +427,7 @@ export const scriptPresets: Record<string, ScriptPreset> = {
       transfer: {
         label: "XC Transfer Rep",
         duration: "2 min",
-        body: "Rehearse walking into the team environment with a stable cue: learn, settle, contribute. No need to solve the whole season today.",
+        body: "Rehearse walking into the team environment and then into the run with a stable cue: learn, settle, contribute. No need to solve the whole season today.",
         prompts: ["Learn", "Settle", "Contribute"]
       }
     }
@@ -436,8 +436,8 @@ export const scriptPresets: Record<string, ScriptPreset> = {
     title: "Altitude Camp Patience",
     stationId: "processGoals",
     durationMinutes: 6,
-    intent: "Rehearse patience and composure while the body adapts.",
-    transferContext: "Big Bear altitude, group runs, humility, and confidence without forcing.",
+    intent: "Use before the run to rehearse patience and composure while the body adapts.",
+    transferContext: "Today's Big Bear run: altitude, group rhythm, humility, and confidence without forcing.",
     steps: {
       regulation: {
         label: "Regulation Primer",
@@ -454,7 +454,7 @@ export const scriptPresets: Record<string, ScriptPreset> = {
       transfer: {
         label: "XC Transfer Rep",
         duration: "2 min",
-        body: "Imagine a run where the legs feel strange. You choose humility, rhythm, and the next controllable instead of comparison.",
+        body: "Imagine today's run starting with strange legs. You choose humility, rhythm, and the next controllable instead of comparison.",
         prompts: ["Strange legs", "Humility", "Rhythm"]
       }
     }
@@ -463,8 +463,8 @@ export const scriptPresets: Record<string, ScriptPreset> = {
     title: "Championship-Week Confidence",
     stationId: "imagery",
     durationMinutes: 5,
-    intent: "Use specific confidence, not hype, and keep novelty low.",
-    transferContext: "Major-race week with tactical patience and controlled aggression.",
+    intent: "Use before the run or warm-up for specific confidence, not hype, while keeping novelty low.",
+    transferContext: "Today's championship-week rep: tactical patience and controlled aggression.",
     steps: {
       regulation: {
         label: "Regulation Primer",
@@ -481,7 +481,7 @@ export const scriptPresets: Record<string, ScriptPreset> = {
       transfer: {
         label: "XC Transfer Rep",
         duration: "90 sec",
-        body: "Visualize the race asking a question: surge, hill, contact, gap. Your answer is simple: settle, choose, commit.",
+        body: "Visualize today's run or race asking a question: surge, hill, contact, gap. Your answer is simple: settle, choose, commit.",
         prompts: ["Settle", "Choose", "Commit"]
       }
     }
@@ -490,8 +490,8 @@ export const scriptPresets: Record<string, ScriptPreset> = {
     title: "Three-Minute Maintenance Rep",
     stationId: "breathing",
     durationMinutes: 3,
-    intent: "Protect the habit when the week is thin. Minimum effective dose.",
-    transferContext: "A small rep that keeps the room open.",
+    intent: "Use before the run to protect the habit when the week is thin. Minimum effective dose.",
+    transferContext: "Today's small pre-run rep that keeps the room open.",
     steps: {
       regulation: {
         label: "Regulation Primer",
@@ -502,7 +502,7 @@ export const scriptPresets: Record<string, ScriptPreset> = {
       primary: {
         label: "Primary Skill Rep",
         duration: "60 sec",
-        body: "Choose one cue for your next run or next recovery choice.",
+        body: "Choose one cue for today's run, walk, lift, or recovery choice.",
         prompts: ["One cue", "One action", "Done cleanly"]
       },
       transfer: {

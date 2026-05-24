@@ -2,14 +2,16 @@
 
 ## Primary Daily Flow
 
-1. Open app.
+Mental Gym is primarily a pre-run app. The normal use case is to open it before the run, workout, warm-up, race routine, travel-day movement, or recovery block.
+
+1. Open app before training.
 2. Review today's date, current phase, next key event, and recommended session.
-3. Start the daily mental workout.
+3. Start the daily pre-run mental workout.
 4. Complete readiness check.
 5. Complete regulation primer.
 6. Complete primary skill rep.
 7. Complete XC transfer rep.
-8. Save reflection, usefulness, execution, and carryover cue.
+8. Save reflection, usefulness, execution, and carryover cue for the run.
 9. Review progress or leave.
 
 ## Default Session Architecture
@@ -34,7 +36,7 @@
    - process goal
    - if-then planning
    - routine rehearsal
-   - reset/refocus
+   - reset/refocus for residue carried into the next run
 
 4. XC transfer rep, 60-120 seconds.
    - pack running
@@ -46,7 +48,7 @@
    - first kilometer patience
    - altitude camp adjustment
    - race-morning nerves
-   - post-bad-workout reset
+   - next-run reset after a rough workout or race
    - transition from summer to UCLA/team environment
 
 5. Reflection, 20-30 seconds.
@@ -62,7 +64,7 @@
 - Date.
 - Current season phase.
 - Days until next key event.
-- Recommended daily session.
+- Recommended daily pre-run session.
 - Start session button.
 - Weekly sessions completed.
 - Recent stress, focus, confidence, freshness.
