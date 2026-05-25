@@ -17,6 +17,7 @@ Mental Gym is built as a daily 5-10 minute pre-run sport psychology training roo
 ## What The App Does
 
 - Recommends a daily pre-run mental workout from the current season phase, upcoming races, recent check-ins, adherence, stress, focus, confidence, and prior usefulness.
+- Renders session copy from the current station, level, phase, and race proximity so seasonal prompts stay current.
 - Periodizes mental training from base work through London travel, UCLA reporting transition, Big Bear altitude camp, Nuttycombe, Big Tens, and West Regional.
 - Guides a complete daily session with readiness ratings, breathing, skill practice, XC-specific transfer, and reflection.
 - Tracks weekly adherence, recent trends, carryover cues, and session history.
@@ -83,8 +84,10 @@ lib/
   analytics.ts
   recommendation.ts
   season.ts
+  session-content.ts
   stations.ts
   storage.ts
+  sync.ts
 types/
   mental-gym.ts
 ```

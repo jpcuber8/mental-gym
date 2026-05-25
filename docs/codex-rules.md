@@ -7,7 +7,7 @@
 - Do not add coach dashboards, billing, team features, admin panels, or enterprise auth.
 - Do not add Supabase unless a future request clearly needs a full relational backend or authentication.
 - Prefer the existing Upstash Redis sync route for simple cross-device backup/sync.
-- Do not add AI or paid APIs.
+- Do not add AI or paid APIs unless Joshua explicitly asks for a feature that cannot be handled by the transparent rules engine.
 - Keep the app deployable to Vercel.
 
 ## Technical Rules
@@ -18,8 +18,9 @@
 - Keep persistence behind `lib/storage.ts`.
 - Keep cloud sync helpers in `lib/sync.ts`.
 - Keep recommendation logic in `lib/recommendation.ts`.
+- Keep phase-aware session copy in `lib/session-content.ts`.
 - Keep season calendar and phase logic in `lib/season.ts`.
-- Keep station content and scripts in `lib/stations.ts`.
+- Keep station definitions and level descriptions in `lib/stations.ts`.
 - Keep shared types in `types/mental-gym.ts`.
 - Prefer local-first data and simple browser APIs.
 
@@ -40,6 +41,7 @@ Rules to preserve:
 - If travel phase is active, prioritize short, forgiving sessions and sleep/downshift.
 - If Big Bear phase is active, prioritize patience, adaptation, and group composure.
 - Near key races, reduce novelty and complexity.
+- Session copy must be rendered from current phase, race proximity, station, and level so stale seasonal contexts do not appear later in the year.
 
 ## Design Rules
 
@@ -54,6 +56,9 @@ Rules to preserve:
 ## Content Rules
 
 - Session content must be specific to distance running and cross country.
+- Skills may repeat, but context should change with the season phase and upcoming event.
+- Big Bear prompts should only appear during Big Bear phase.
+- Championship-period prompts should emphasize race execution, routine compression, tactical patience, confidence recall, and no novelty.
 - Avoid lorem ipsum.
 - Avoid generic self-help copy.
 - Avoid brain games and cognitive-fatigue drills as the core product.

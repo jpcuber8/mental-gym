@@ -23,6 +23,8 @@ The recommendation engine considers:
 - previous usefulness and execution
 - travel, race day, UCLA transition, altitude camp, and championship proximity
 
+The app uses a transparent rule-based engine rather than AI by default. For this personal training use case, auditability matters: Joshua should be able to trust why a session appeared, and race-week recommendations should not invent new or stale context.
+
 ## Scientific Positioning
 
 The app is sport-specific psychological skills training. It avoids generic brain games, IQ-style drills, and cognitively fatiguing exercises as the core product.
@@ -38,6 +40,15 @@ Core targets:
 - reset/refocus before the next run when bad workouts, bad races, travel stress, or difficult transitions are still carrying over
 
 The app is science-informed but modest in claims. It is not designed to diagnose or treat mental illness.
+
+The content system separates skill progression from seasonal context:
+
+- station = the psychological skill
+- level = difficulty and integration
+- season phase = the running context
+- recent ratings = adaptive adjustment
+
+This means skills repeat enough to become automatic, but the script changes with the season. October should not surface Big Bear altitude prompts unless the user manually chooses to review that context.
 
 ## Season Timeline
 
