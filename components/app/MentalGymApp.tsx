@@ -626,37 +626,85 @@ function ProgressView({ data, phaseGoal }: { data: MentalGymData; phaseGoal: num
   const adherence = getAdherence(data, phaseGoal);
   const weeklySessions = getSessionsThisWeek(data);
   const averages = getLatestAverages(data);
+  const totalMinutes = data.sessions.reduce((sum, session) => sum + session.durationMinutes, 0);
+  const skillLevelsBanked = stations.reduce((sum, station) => sum + (data.skillProgress[station.id]?.level ?? 1), 0);
+  const skillLevelTarget = stations.length * 4;
+  const stationCounts = stations.reduce(
+    (counts, station) => ({
+      ...counts,
+      [station.id]: data.sessions.filter((session) => session.stationId === station.id).length
+    }),
+    {} as Record<StationId, number>
+  );
 
   return (
     <div className="space-y-5">
       <section>
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Progress</p>
-        <h2 className="mt-1 text-3xl font-semibold tracking-tight">Training log that stays useful</h2>
+        <h2 className="mt-1 text-3xl font-semibold tracking-tight">Work that compounds</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          Every pre-run rep adds to the skill map. Levels rise slowly, cues stay visible, and the log shows the work stacking up.
+        </p>
       </section>
 
       <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h3 className="text-lg font-semibold">Weekly adherence</h3>
-            <p className="mt-1 text-sm text-slate-600">Sessions completed this week, without punitive streaks.</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Training bank</p>
+            <h3 className="mt-2 text-2xl font-semibold tracking-tight">{data.sessions.length} mental reps logged</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              The goal is not a streak. It is a growing bank of calm, cues, race images, and reset reps you can pull from.
+            </p>
           </div>
-          <Pill>{adherence.completed}/{adherence.goal}</Pill>
+          <div className="grid grid-cols-3 gap-2 sm:min-w-80">
+            <ProgressStat label="Minutes" value={String(totalMinutes)} />
+            <ProgressStat label="Levels" value={`${skillLevelsBanked}/${skillLevelTarget}`} />
+            <ProgressStat label="This week" value={`${adherence.completed}/${adherence.goal}`} />
+          </div>
         </div>
-        <div className="mt-4 h-3 overflow-hidden rounded-full bg-slate-100">
-          <div className="h-full rounded-full bg-slate-950" style={{ width: `${Math.min(100, adherence.rate * 100)}%` }} />
+        <div className="mt-5">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-semibold text-slate-800">Weekly rhythm</p>
+            <span className="text-sm text-slate-500">{Math.min(adherence.completed, adherence.goal)} of {adherence.goal} planned</span>
+          </div>
+          <div className="mt-3 grid gap-2" style={{ gridTemplateColumns: `repeat(${Math.max(adherence.goal, 1)}, minmax(0, 1fr))` }}>
+            {Array.from({ length: Math.max(adherence.goal, 1) }).map((_, index) => (
+              <WeekMarker active={index < adherence.completed} index={index} key={index} />
+            ))}
+          </div>
         </div>
-        <div className="mt-4 grid gap-2 sm:grid-cols-4">
-          <MetricCard label="Stress" value={formatAverage(averages.stress)} sublabel="recent" compact />
-          <MetricCard label="Focus" value={formatAverage(averages.focus)} sublabel="recent" compact />
-          <MetricCard label="Confidence" value={formatAverage(averages.confidence)} sublabel="recent" compact />
-          <MetricCard label="Freshness" value={formatAverage(averages.freshness)} sublabel="recent" compact />
+      </section>
+
+      <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-lg font-semibold">Skill map</h3>
+            <p className="mt-1 text-sm leading-6 text-slate-600">Each station has four levels. Useful, well-executed reps fill the pips toward the next unlock.</p>
+          </div>
+          <Pill>{skillLevelsBanked} levels active</Pill>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {stations.map((station) => (
+            <SkillTrackCard
+              key={station.id}
+              level={data.skillProgress[station.id]?.level ?? 1}
+              reps={stationCounts[station.id] ?? 0}
+              stationId={station.id}
+              successStreak={data.skillProgress[station.id]?.successStreak ?? 0}
+              title={station.title}
+            />
+          ))}
         </div>
       </section>
 
       <section className="grid gap-3 sm:grid-cols-2">
+        <MetricCard label="Stress" value={formatAverage(averages.stress)} sublabel="recent avg" compact />
         <TrendCard label="Stress" values={getMetricTrend(data, "stress")} />
+        <MetricCard label="Focus" value={formatAverage(averages.focus)} sublabel="recent avg" compact />
         <TrendCard label="Focus" values={getMetricTrend(data, "focus")} />
+        <MetricCard label="Confidence" value={formatAverage(averages.confidence)} sublabel="recent avg" compact />
         <TrendCard label="Confidence" values={getMetricTrend(data, "confidence")} />
+        <MetricCard label="Freshness" value={formatAverage(averages.freshness)} sublabel="recent avg" compact />
         <TrendCard label="Freshness" values={getMetricTrend(data, "freshness")} />
       </section>
 
@@ -700,6 +748,75 @@ function ProgressView({ data, phaseGoal }: { data: MentalGymData; phaseGoal: num
         </div>
       </section>
     </div>
+  );
+}
+
+function ProgressStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-3 text-center">
+      <p className="text-xl font-semibold tracking-tight">{value}</p>
+      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">{label}</p>
+    </div>
+  );
+}
+
+function WeekMarker({ active, index }: { active: boolean; index: number }) {
+  return (
+    <div
+      className={`flex h-12 items-center justify-center rounded-md border text-xs font-semibold ${
+        active ? "border-slate-950 bg-slate-950 text-white" : "border-slate-200 bg-slate-50 text-slate-400"
+      }`}
+    >
+      {index + 1}
+    </div>
+  );
+}
+
+const stationAccentClasses: Record<StationId, string> = {
+  breathing: "bg-emerald-500",
+  attention: "bg-sky-500",
+  selfTalk: "bg-amber-500",
+  imagery: "bg-indigo-500",
+  processGoals: "bg-rose-500",
+  routine: "bg-slate-800",
+  reset: "bg-teal-500"
+};
+
+function SkillTrackCard({
+  level,
+  reps,
+  stationId,
+  successStreak,
+  title
+}: {
+  level: number;
+  reps: number;
+  stationId: StationId;
+  successStreak: number;
+  title: string;
+}) {
+  return (
+    <article className="rounded-md border border-slate-200 bg-slate-50 p-3">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${stationAccentClasses[stationId]}`} />
+          <h4 className="truncate text-sm font-semibold">{title}</h4>
+        </div>
+        <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 shadow-sm">L{level}</span>
+      </div>
+      <div className="mt-3 grid grid-cols-4 gap-1.5">
+        {[1, 2, 3, 4].map((targetLevel) => (
+          <div
+            className={`h-2 rounded-full ${targetLevel <= level ? stationAccentClasses[stationId] : "bg-white"}`}
+            key={targetLevel}
+          />
+        ))}
+      </div>
+      <div className="mt-3 flex items-center justify-between gap-3 text-xs text-slate-500">
+        <span>{reps} reps</span>
+        <span>{level >= 4 ? "Level cap reached" : `${successStreak}/3 clean reps to L${level + 1}`}</span>
+      </div>
+    </article>
   );
 }
 
